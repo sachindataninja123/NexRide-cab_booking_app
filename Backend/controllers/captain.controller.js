@@ -1,3 +1,4 @@
+const blacklistTokenModel = require("../models/blacklistToken.model");
 const captainModel = require("../models/captain.model");
 const { validationResult } = require("express-validator");
 
@@ -62,7 +63,6 @@ const registerCaptain = async (req, res) => {
       captain,
       token,
     });
-
   } catch (error) {
     console.error("Error:", error.message);
 
@@ -73,4 +73,94 @@ const registerCaptain = async (req, res) => {
   }
 };
 
-module.exports = { registerCaptain };
+const loginCaptain = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "All fields required",
+      });
+    }
+
+    const captain = await captainModel.findOne({ email }).select("+password");
+
+    if (!captain) {
+      return res.status(400).json({
+        message: "Captain not found",
+      });
+    }
+
+    const isMatch = await captain.comparePassword(password);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid email & password",
+      });
+    }
+
+    const token = captain.generateAuthToken();
+    res.cookie("token", token);
+
+    return res.status(200).json({
+      message: "Captain logged in successfully",
+      captain: {
+        _id: captain._id,
+        email: captain.email,
+        name: captain.fullname.firstname,
+      },
+      token,
+    });
+  } catch (error) {
+    console.error("Error:", error.message);
+
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
+const captainProfile = async (req, res) => {
+  try {
+    return res.status(200).json({
+      message: "Captain fetched successfully",
+      captain: req.captain,
+    });
+  } catch (error) {
+    console.error("Error:", error.message);
+
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
+const captainLogout = async (req, res) => {
+  try {
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+    await blacklistTokenModel.create({ token });
+
+    res.clearCookie("token");
+
+    return res.status(200).json({
+      message: "Captain logged out successfully",
+    });
+  } catch (error) {
+    console.error("Error:", error.message);
+
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
+module.exports = { registerCaptain, loginCaptain, captainProfile ,captainLogout};
