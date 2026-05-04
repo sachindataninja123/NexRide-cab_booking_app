@@ -12,6 +12,6 @@ app.get("/", (req, res) => {
   res.send("server is starting");
 });
 
-app.use("/api/user", userRouter);
+app.use("/user", userRouter);
 
 module.exports = app;
