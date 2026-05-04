@@ -24,7 +24,7 @@ const registerController = async (req, res) => {
       });
     }
 
-    const user = await userModel.create({
+    const user = await userModel({
       firstname,
       lastname,
       email,
