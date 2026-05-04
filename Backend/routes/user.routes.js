@@ -4,6 +4,7 @@ const {
   registerController,
   loginController,
   getUserProfile,
+  logoutUser,
 } = require("../controllers/user.controller");
 const { isAuth } = require("../middlewares/auth.middleware");
 const userRouter = express.Router();
@@ -34,5 +35,7 @@ userRouter.post(
 );
 
 userRouter.get("/profile", isAuth, getUserProfile);
+
+userRouter.get("/logout" , isAuth ,logoutUser )
 
 module.exports = userRouter;
