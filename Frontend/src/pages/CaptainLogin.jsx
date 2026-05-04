@@ -1,78 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 
 const CaptainLogin = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [captainData, setCaptainData] = useState({});
 
   const submitHandler = (e) => {
     e.preventDefault();
+
     setCaptainData({
       email: email,
       password: password,
     });
-
-    console.log(captainData);
 
     setEmail("");
     setPassword("");
   };
 
   return (
-    <div>
-      <div className="p-7 h-screen flex justify-between flex-col">
-        <div>
-          <img
-            className="w-16 mb-10"
-            src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-            alt=""
-          />
-          <form
-            action=""
-            onSubmit={(e) => {
-              submitHandler(e);
-            }}
-          >
-            <h3 className="text-lg font-medium mb-2">What's your email</h3>
+    <div className="min-h-screen flex flex-col justify-between bg-white px-6 py-8">
+      <div className="max-w-md mx-auto w-full">
+        <img
+          className="w-16 mb-8"
+          src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
+          alt="logo"
+        />
+
+        <form onSubmit={submitHandler} className="space-y-5">
+          <div>
+            <h3 className="text-sm font-medium mb-2">Email</h3>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-[#eeeeee] mb-5 rounded px-4 w-full text-lg border placeholder:text-base py-2"
+              className="w-full bg-gray-100 rounded-md px-4 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-black"
               required
               placeholder="email@example.com"
             />
-            <h3 className="text-lg font-medium mb-2">Enter Password</h3>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-medium mb-2">Password</h3>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-[#eeeeee] mb-5 rounded px-4 w-full text-lg border placeholder:text-sm py-2"
+              className="w-full bg-gray-100 rounded-md px-4 py-2 text-sm border focus:outline-none focus:ring-2 focus:ring-black"
               required
-              placeholder="password"
+              placeholder="Enter password"
             />
-            <button className="bg-[#111] text-white rounded px-4 w-full text-lg  py-2">
-              Login
-            </button>
-          </form>
-          <p className="text-left mt-2">
-            New here?{" "}
-            <Link to="/captain-signup" className="text-blue-500">
-              Register as a Captain
-            </Link>
-          </p>
-        </div>
+          </div>
 
-        <div>
-          <Link
-            to="/login"
-            className="bg-[#d5622d] text-white flex items-center justify-center rounded px-4 w-full text-lg py-2"
-          >
-            Sign as a User
+          {/* Login Button */}
+          <button className="w-full bg-black text-white rounded-md py-2 text-sm font-medium hover:bg-gray-900 transition">
+            Login as Captain
+          </button>
+        </form>
+
+        <p className="text-center text-sm mt-4">
+          New here?{" "}
+          <Link to="/captain-signup" className="text-blue-500 font-medium">
+            Register as Captain
           </Link>
-        </div>
+        </p>
+      </div>
+
+      <div className="max-w-md mx-auto w-full space-y-4">
+        <Link
+          to="/login"
+          className="bg-orange-500 text-white flex items-center justify-center rounded-md py-2 text-sm font-medium hover:bg-orange-600 transition"
+        >
+          Sign in as User
+        </Link>
+
+        <p className="text-xs text-gray-500 text-center">
+          By continuing, you agree to our{" "}
+          <span className="underline cursor-pointer">Terms</span> and{" "}
+          <span className="underline cursor-pointer">Privacy Policy</span>.
+        </p>
       </div>
     </div>
   );
