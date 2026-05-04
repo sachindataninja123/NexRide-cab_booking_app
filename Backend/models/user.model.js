@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: [true, "Email is required"],
-      unique: true, 
+      unique: true,
     },
     password: {
       type: String,
@@ -30,12 +30,12 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 //  Generate JWT
 userSchema.methods.generateAuthToken = function () {
-  return jwt.sign({ _id: this._id }, config.JWT_SECRET);
+  return jwt.sign({ _id: this._id }, config.JWT_SECRET, { expiresIn: "24h" });
 };
 
 // Compare Password

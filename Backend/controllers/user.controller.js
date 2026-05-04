@@ -56,7 +56,6 @@ const registerController = async (req, res) => {
 
 const loginController = async (req, res) => {
   try {
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -88,6 +87,8 @@ const loginController = async (req, res) => {
 
     const token = user.generateAuthToken();
 
+    res.cookie("token" , token)
+
     return res.status(200).json({
       message: "User logged in successfully",
       user: {
@@ -106,6 +107,20 @@ const loginController = async (req, res) => {
   }
 };
 
+const getUserProfile = async (req, res) => {
+  try {
+    res.status(200).json({
+      message: "User fetched successfully",
+      user: req.user,
+    });
+  } catch (error) {
+    console.error("Error:", error.message);
 
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
 
-module.exports = { registerController, loginController };
+module.exports = { registerController, loginController , getUserProfile };
