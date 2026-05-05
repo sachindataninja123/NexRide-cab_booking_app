@@ -1,22 +1,27 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { captainDataContext } from "../context/CaptainContext";
+import axios from "axios";
 
 const CaptainSignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [captainData, setCaptainData] = useState({});
 
   const [vehicleColor, setVehicleColor] = useState("");
   const [plate, setPlate] = useState("");
   const [capacity, setCapacity] = useState("");
   const [vehicleType, setVehicleType] = useState("");
 
-  const submitHandler = (e) => {
+  const { captain, setCaptain } = useContext(captainDataContext);
+
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    setCaptainData({
+    const captainData = {
       fullname: {
         firstname: firstName,
         lastname: lastName,
@@ -29,9 +34,20 @@ const CaptainSignUp = () => {
         capacity,
         vehicleType,
       },
-    });
+    };
 
-  
+    const res = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/captains/register`,
+      captainData,
+    );
+
+    if (res.status === 201) {
+      const data = res.data;
+      setCaptain(data.captain);
+      localStorage.setItem("token" , data.token)
+
+      navigate("/captain-login");
+    }
 
     // reset
     setEmail("");
@@ -108,47 +124,47 @@ const CaptainSignUp = () => {
           <div className="space-y-3">
             <h3 className="text-sm font-medium">Vehicle Details</h3>
 
-           <div className="flex  gap-3">
-             <input
-              type="text"
-              value={vehicleColor}
-              onChange={(e) => setVehicleColor(e.target.value)}
-              placeholder="Vehicle color"
-              className="w-1/2 bg-gray-100 rounded-md px-4 py-2 text-sm border focus:ring-2 focus:ring-black outline-none"
-              required
-            />
+            <div className="flex  gap-3">
+              <input
+                type="text"
+                value={vehicleColor}
+                onChange={(e) => setVehicleColor(e.target.value)}
+                placeholder="Vehicle color"
+                className="w-1/2 bg-gray-100 rounded-md px-4 py-2 text-sm border focus:ring-2 focus:ring-black outline-none"
+                required
+              />
 
-            <input
-              type="text"
-              value={plate}
-              onChange={(e) => setPlate(e.target.value)}
-              placeholder="Plate number"
-              className="w-1/2 bg-gray-100 rounded-md px-4 py-2 text-sm border focus:ring-2 focus:ring-black outline-none"
-              required
-            />
-           </div>
+              <input
+                type="text"
+                value={plate}
+                onChange={(e) => setPlate(e.target.value)}
+                placeholder="Plate number"
+                className="w-1/2 bg-gray-100 rounded-md px-4 py-2 text-sm border focus:ring-2 focus:ring-black outline-none"
+                required
+              />
+            </div>
 
             <div className="flex gap-3">
               <input
-              type="number"
-              value={capacity}
-              onChange={(e) => setCapacity(e.target.value)}
-              placeholder="Passenger capacity"
-              className="w-1/2 bg-gray-100 rounded-md px-4 py-2 text-sm border focus:ring-2 focus:ring-black outline-none"
-              required
-            />
+                type="number"
+                value={capacity}
+                onChange={(e) => setCapacity(e.target.value)}
+                placeholder="Passenger capacity"
+                className="w-1/2 bg-gray-100 rounded-md px-4 py-2 text-sm border focus:ring-2 focus:ring-black outline-none"
+                required
+              />
 
-            <select
-              value={vehicleType}
-              onChange={(e) => setVehicleType(e.target.value)}
-              className="w-1/2 bg-gray-100 rounded-md px-1 py-2 text-sm border focus:ring-2 focus:ring-black outline-none"
-              required
-            >
-              <option value="">Vehicle type</option>
-              <option value="car">Car</option>
-              <option value="motorcycle">Motorcycle</option>
-              <option value="auto">Auto</option>
-            </select>
+              <select
+                value={vehicleType}
+                onChange={(e) => setVehicleType(e.target.value)}
+                className="w-1/2 bg-gray-100 rounded-md px-1 py-2 text-sm border focus:ring-2 focus:ring-black outline-none"
+                required
+              >
+                <option value="">Vehicle type</option>
+                <option value="car">Car</option>
+                <option value="motorcycle">Motorcycle</option>
+                <option value="auto">Auto</option>
+              </select>
             </div>
           </div>
 
