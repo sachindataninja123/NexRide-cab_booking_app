@@ -4,6 +4,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap/gsap-core";
 import { RiArrowDownWideLine } from "react-icons/ri";
 import LocationSearchPanel from "../components/LocationSearchPanel";
+import VehiclePanel from "../components/VehiclePanel";
 
 const Home = () => {
   const [pickup, setPickup] = useState();
@@ -24,7 +25,6 @@ const Home = () => {
       gsap.to(panelRef.current, {
         height: "70%",
         padding: 24,
-      
       });
       gsap.to(closePanelRef.current, {
         opacity: 1,
@@ -41,7 +41,7 @@ const Home = () => {
   }, [panelOpen]);
 
   return (
-    <div className="relative h-screen">
+    <div className="relative h-screen overflow-hidden">
       <img
         className="w-16 absolute left-5 top-5"
         src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
@@ -94,6 +94,10 @@ const Home = () => {
         <div ref={panelRef} className="bg-white h-0 ">
           <LocationSearchPanel />
         </div>
+      </div>
+
+      <div className="fixed w-full z-10 bottom-0 bg-white px-3 py-7 pt-5">
+        <VehiclePanel />
       </div>
     </div>
   );
