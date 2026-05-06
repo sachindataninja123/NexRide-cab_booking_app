@@ -6,6 +6,7 @@ import { RiArrowDownWideLine } from "react-icons/ri";
 import LocationSearchPanel from "../components/LocationSearchPanel";
 import VehiclePanel from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
+import LookingforDrivers from "../components/LookingforDrivers";
 
 const Home = () => {
   const [pickup, setPickup] = useState();
@@ -19,6 +20,9 @@ const Home = () => {
 
   const [confirmRidePanelOpen, setconfirmRidePanelOpen] = useState(false);
   const confirmRidePanelRef = useRef(null);
+
+  const [vehicleFound, setvehicleFound] = useState(false);
+  const vehicleFoundRef = useRef(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -70,6 +74,18 @@ const Home = () => {
       });
     }
   }, [confirmRidePanelOpen]);
+
+  useGSAP(() => {
+    if (vehicleFound) {
+      gsap.to(vehicleFoundRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(vehicleFoundRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [vehicleFound]);
 
   return (
     <div className="relative h-screen overflow-hidden">
@@ -134,14 +150,24 @@ const Home = () => {
         ref={vehiclePanelRef}
         className="fixed w-full translate-y-full z-10 bottom-0 bg-white px-3 py-7 pt-10"
       >
-        <VehiclePanel  setVehiclePanelOpen={setVehiclePanelOpen} setconfirmRidePanelOpen={setconfirmRidePanelOpen} />
+        <VehiclePanel
+          setVehiclePanelOpen={setVehiclePanelOpen}
+          setconfirmRidePanelOpen={setconfirmRidePanelOpen}
+        />
       </div>
 
       <div
         ref={confirmRidePanelRef}
         className="fixed w-full translate-y-full z-10 bottom-0 bg-white px-3 py-6 pt-12"
       >
-        <ConfirmRide setconfirmRidePanelOpen={setconfirmRidePanelOpen} />
+        <ConfirmRide
+          setconfirmRidePanelOpen={setconfirmRidePanelOpen}
+          setvehicleFound={setvehicleFound}
+        />
+      </div>
+
+      <div ref={vehicleFoundRef} className="fixed w-full translate-y-full z-10 bottom-0 bg-white px-3 py-6 pt-12">
+        <LookingforDrivers setvehicleFound={setvehicleFound} />
       </div>
     </div>
   );

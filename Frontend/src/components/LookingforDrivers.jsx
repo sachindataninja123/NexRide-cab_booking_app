@@ -4,16 +4,16 @@ import { MdLocationPin } from "react-icons/md";
 import { RiCheckboxFill } from "react-icons/ri";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 
-const ConfirmRide = ({ setconfirmRidePanelOpen, setvehicleFound }) => {
+const LookingforDrivers = ({ setvehicleFound }) => {
   return (
     <div>
       <h5
         className="absolute w-[93%] flex items-center justify-center mx-auto text-gray-300 top-2 right-5 "
-        onClick={() => setconfirmRidePanelOpen(false)}
+        onClick={() => setvehicleFound(false)}
       >
         <RiArrowDownWideLine size={26} />
       </h5>
-      <h2 className="text-lg font-semibold mb-4">Conifrm your Ride</h2>
+      <h2 className="text-lg font-semibold mb-4">Looking for a Driver</h2>
 
       <div className="flex gap-2 justify-between flex-col items-center">
         <img
@@ -52,19 +52,9 @@ const ConfirmRide = ({ setconfirmRidePanelOpen, setvehicleFound }) => {
             </div>
           </div>
         </div>
-
-        <button
-          onClick={() => {
-            setvehicleFound(true)
-            setconfirmRidePanelOpen(false)
-          }}
-          className="w-full mt-5 bg-green-600 font-semibold p-2 rounded-lg text-white "
-        >
-          Confirm
-        </button>
       </div>
     </div>
   );
 };
 
-export default ConfirmRide;
+export default LookingforDrivers;
