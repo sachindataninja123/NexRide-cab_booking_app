@@ -1,28 +1,29 @@
 import React, { useState } from "react";
 import { IoIosPeople } from "react-icons/io";
+import { RiArrowDownWideLine } from "react-icons/ri";
 
-const VehiclePanel = () => {
-  const [selected, setSelected] = useState("");
-
+const VehiclePanel = ({ setVehiclePanelOpen, setconfirmRidePanelOpen }) => {
   return (
     <div className="px-4 py-3">
+      <h5
+        className="absolute w-[93%] flex items-center justify-center mx-auto text-gray-300 top-2 right-5 "
+        onClick={() => setVehiclePanelOpen(false)}
+      >
+        <RiArrowDownWideLine size={26} />
+      </h5>
       <h2 className="text-lg font-semibold mb-4">Choose a ride</h2>
 
       {/* CARD TEMPLATE */}
       {/* CAR */}
       <div
-        onClick={() => setSelected("car")}
-        className={`flex items-center justify-between p-4 rounded-xl border mb-3 cursor-pointer transition-all
-        ${
-          selected === "car"
-            ? "border-black border-2 bg-gray-100"
-            : "border-gray-200 hover:bg-gray-50"
-        }`}
+        onClick={() => setconfirmRidePanelOpen(true)}
+        className={`flex items-center justify-between p-4 rounded-xl border  mb-3  border-gray-200 active:border-black  cursor-pointer transition-all
+       `}
       >
         <div className="flex items-center gap-4">
           <img
             src="https://www.pngplay.com/wp-content/uploads/8/Uber-PNG-Photos.png"
-            className="h-12 w-16 object-contain"
+            className="h-12 w-16 object-cover"
             alt="car"
           />
 
@@ -43,13 +44,9 @@ const VehiclePanel = () => {
 
       {/* AUTO */}
       <div
-        onClick={() => setSelected("auto")}
-        className={`flex items-center justify-between p-4 rounded-xl border mb-3 cursor-pointer transition-all
-        ${
-          selected === "auto"
-            ? "border-black border-2 bg-gray-100"
-            : "border-gray-200 hover:bg-gray-50"
-        }`}
+        onClick={() => setconfirmRidePanelOpen(true)}
+        className={`flex items-center justify-between p-4 rounded-xl border border-gray-200 active:border-black  mb-3 cursor-pointer transition-all
+        `}
       >
         <div className="flex items-center gap-4">
           <img
@@ -75,13 +72,9 @@ const VehiclePanel = () => {
 
       {/* BIKE */}
       <div
-        onClick={() => setSelected("bike")}
-        className={`flex items-center justify-between p-4 rounded-xl border mb-3 cursor-pointer transition-all
-        ${
-          selected === "bike"
-            ? "border-black border-2 bg-gray-100"
-            : "border-gray-200 hover:bg-gray-50"
-        }`}
+        onClick={() => setconfirmRidePanelOpen(true)}
+        className={`flex items-center justify-between p-4 rounded-xl border mb-3  border-gray-200 active:border-black  cursor-pointer transition-all
+       `}
       >
         <div className="flex items-center gap-4">
           <img
@@ -104,19 +97,6 @@ const VehiclePanel = () => {
 
         <h4 className="text-sm font-semibold">₹65.44</h4>
       </div>
-
-      {/* CONFIRM BUTTON */}
-      <button
-        disabled={!selected}
-        className={`w-full mt-3 py-3 rounded-lg text-white text-sm font-medium transition-all
-        ${
-          selected
-            ? "bg-black hover:bg-gray-900 active:scale-[0.98]"
-            : "bg-gray-300 cursor-not-allowed"
-        }`}
-      >
-        {selected ? `Confirm ${selected}` : "Select a ride"}
-      </button>
     </div>
   );
 };

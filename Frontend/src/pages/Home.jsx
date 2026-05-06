@@ -5,6 +5,7 @@ import { gsap } from "gsap/gsap-core";
 import { RiArrowDownWideLine } from "react-icons/ri";
 import LocationSearchPanel from "../components/LocationSearchPanel";
 import VehiclePanel from "../components/VehiclePanel";
+import ConfirmRide from "../components/ConfirmRide";
 
 const Home = () => {
   const [pickup, setPickup] = useState();
@@ -12,6 +13,12 @@ const Home = () => {
   const [panelOpen, setPanelOpen] = useState(false);
   const panelRef = useRef(null);
   const closePanelRef = useRef(null);
+
+  const [vehiclePanelOpen, setVehiclePanelOpen] = useState(false);
+  const vehiclePanelRef = useRef(null);
+
+  const [confirmRidePanelOpen, setconfirmRidePanelOpen] = useState(false);
+  const confirmRidePanelRef = useRef(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -39,6 +46,30 @@ const Home = () => {
       });
     }
   }, [panelOpen]);
+
+  useGSAP(() => {
+    if (vehiclePanelOpen) {
+      gsap.to(vehiclePanelRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(vehiclePanelRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [vehiclePanelOpen]);
+
+  useGSAP(() => {
+    if (confirmRidePanelOpen) {
+      gsap.to(confirmRidePanelRef.current, {
+        transform: "translateY(0)",
+      });
+    } else {
+      gsap.to(confirmRidePanelRef.current, {
+        transform: "translateY(100%)",
+      });
+    }
+  }, [confirmRidePanelOpen]);
 
   return (
     <div className="relative h-screen overflow-hidden">
@@ -92,12 +123,25 @@ const Home = () => {
           </form>
         </div>
         <div ref={panelRef} className="bg-white h-0 ">
-          <LocationSearchPanel />
+          <LocationSearchPanel
+            setPanelOpen={setPanelOpen}
+            setVehiclePanelOpen={setVehiclePanelOpen}
+          />
         </div>
       </div>
 
-      <div className="fixed w-full z-10 bottom-0 bg-white px-3 py-7 pt-5">
-        <VehiclePanel />
+      <div
+        ref={vehiclePanelRef}
+        className="fixed w-full translate-y-full z-10 bottom-0 bg-white px-3 py-7 pt-10"
+      >
+        <VehiclePanel  setVehiclePanelOpen={setVehiclePanelOpen} setconfirmRidePanelOpen={setconfirmRidePanelOpen} />
+      </div>
+
+      <div
+        ref={confirmRidePanelRef}
+        className="fixed w-full translate-y-full z-10 bottom-0 bg-white px-3 py-6 pt-12"
+      >
+        <ConfirmRide setconfirmRidePanelOpen={setconfirmRidePanelOpen} />
       </div>
     </div>
   );
