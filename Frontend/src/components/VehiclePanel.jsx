@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { IoIosPeople } from "react-icons/io";
 
 const VehiclePanel = () => {
   const [selected, setSelected] = useState("");
@@ -26,8 +27,11 @@ const VehiclePanel = () => {
           />
 
           <div>
-            <h3 className="text-sm font-semibold">
-              UberGo <span className="text-gray-500 text-xs font-normal">👤 4</span>
+            <h3 className="text-sm gap-1 flex justify-start items-center font-semibold">
+              UberGo{" "}
+              <span className="text-gray-700 flex items-center justify-center text-md font-normal">
+                <IoIosPeople className="text-blue-800" size={15} /> 4
+              </span>
             </h3>
             <p className="text-xs text-gray-500">5 mins away</p>
             <p className="text-xs text-gray-700">Comfortable rides</p>
@@ -55,8 +59,11 @@ const VehiclePanel = () => {
           />
 
           <div>
-            <h3 className="text-sm font-semibold">
-              UberAuto <span className="text-gray-500 text-xs font-normal">👤 3</span>
+            <h3 className="text-sm gap-1 flex justify-start items-center font-semibold">
+              UberAuto{" "}
+              <span className="text-gray-700 flex items-center justify-center text-md font-normal">
+                <IoIosPeople className="text-blue-800" size={15} /> 3
+              </span>
             </h3>
             <p className="text-xs text-gray-500">2 mins away</p>
             <p className="text-xs text-gray-700">Affordable rides</p>
@@ -84,8 +91,11 @@ const VehiclePanel = () => {
           />
 
           <div>
-            <h3 className="text-sm font-semibold">
-              Moto <span className="text-gray-500 text-xs font-normal">👤 1</span>
+            <h3 className="text-sm font-semibold flex justify-start items-center gap-1">
+              Moto{" "}
+              <span className="text-gray-700 flex items-center justify-center  text-md font-normal">
+                <IoIosPeople className="text-blue-800" size={15} />1
+              </span>
             </h3>
             <p className="text-xs text-gray-500">2 mins away</p>
             <p className="text-xs text-gray-700">Fastest rides</p>
