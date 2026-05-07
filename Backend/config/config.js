@@ -11,10 +11,15 @@ if (!process.env.JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined in the environment variable");
 }
 
+if (!process.env.GOOGLE_MAPS_KEY) {
+  throw new Error("GOOGLE_MAPS_KEY is not defined in the environment variable");
+}
+
 const config = {
   PORT: process.env.PORT,
   MONGO_URL: process.env.MONGO_URL,
   JWT_SECRET: process.env.JWT_SECRET,
+  GOOGLE_MAPS_KEY: process.env.GOOGLE_MAPS_KEY,
 };
 
 module.exports = config;
