@@ -1,32 +1,3 @@
-// const axios = require("axios");
-// const config = require("../config/config");
-
-// const getAddressCoordinate = async (address) => {
-//   const apiKey = config.GOOGLE_MAPS_KEY;
-//   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
-
-//   console.log(apiKey)
-//   console.log(address)
-
-//   try {
-//     const response = await axios.get(url);
-//     if (response.data.status === "OK") {
-//       const location = response.data.results[0].geometry.location;
-//       return {
-//         ltd: location.lat,
-//         lng: location.lng,
-//       };
-//     } else {
-//       throw new Error("Unable to fetch coordinates");
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };
-
-// module.exports = { getAddressCoordinate };
-
 const axios = require("axios");
 
 const nominatimClient = axios.create({
@@ -136,15 +107,46 @@ const getAddressSuggestions = async (input) => {
 
     if (!response.data?.features) return [];
 
-    return response.data.features.map((place) => ({
-      display_name:
-        place.properties.name +
-        (place.properties.city ? `, ${place.properties.city}` : "") +
-        (place.properties.state ? `, ${place.properties.state}` : ""),
-      ltd: place.geometry.coordinates[1],
-      lng: place.geometry.coordinates[0],
-      type: place.properties.type || null,
-    }));
+    return response.data.features.map((place) => {
+      const p = place.properties;
+
+      // Build terms array like Google Places API
+      const termParts = [
+        p.name,
+        p.street,
+        p.district,
+        p.city || p.town || p.village,
+        p.county,
+        p.state,
+        p.country,
+      ].filter(Boolean); // remove null/undefined parts
+
+      const display_name = termParts.join(", ");
+
+      const terms = termParts.map((value, index) => ({
+        offset: index,
+        value,
+      }));
+
+      return {
+        display_name,
+        terms,
+        ltd: place.geometry.coordinates[1],
+        lng: place.geometry.coordinates[0],
+        type: p.type || p.osm_value || null,
+        details: {
+          name: p.name || null,
+          street: p.street || null,
+          district: p.district || null,
+          city: p.city || p.town || p.village || null,
+          county: p.county || null,
+          state: p.state || null,
+          country: p.country || null,
+          postcode: p.postcode || null,
+          osm_id: p.osm_id || null,
+        },
+      };
+    });
   } catch (error) {
     console.error("Suggestions error:", error.message);
     throw error;
