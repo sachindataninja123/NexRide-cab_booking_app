@@ -176,16 +176,14 @@ import axios from "axios";
 const CaptainHome = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
   const ridePopupPanelref = useRef(null);
-
   const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
   const confirmRidePopupPanelRef = useRef(null);
-
   const { socket } = useContext(SocketContext);
   const { captain } = useContext(captainDataContext);
-
   const [ride, setRide] = useState(null);
   const rideRef = useRef(null);
 
+  
   useEffect(() => {
     socket.emit("join", {
       userId: captain._id,

@@ -4,13 +4,38 @@ import { MdLocationPin } from "react-icons/md";
 import { RiCheckboxFill } from "react-icons/ri";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel ,ride}) => {
+const ConfirmRidePopup = ({
+  setRidePopupPanel,
+  setConfirmRidePopupPanel,
+  ride,
+}) => {
   const [otp, setOtp] = useState();
+  const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
+
+    const res = await axios.get(
+      `${import.meta.env.VITE_BASE_URL}/rides/start-ride`,
+      {
+        params: {
+          rideId: ride._id,
+          otp: otp,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      },
+    );
+
+    if (res.status === 200) {
+      setConfirmRidePopupPanel(false);
+      setRidePopupPanel(false);
+      navigate("/captain-riding");
+    }
   };
 
   return (
@@ -32,7 +57,9 @@ const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel ,ride}) 
           />
 
           <div>
-            <h4 className="font-semibold text-gray-800">{ride?.user.firstname}</h4>
+            <h4 className="font-semibold text-gray-800">
+              {ride?.user.firstname}
+            </h4>
             <p className="text-sm text-gray-500">Passenger</p>
           </div>
         </div>
@@ -53,9 +80,7 @@ const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel ,ride}) 
             <div>
               <h3 className="font-semibold text-gray-800">Pickup Point</h3>
 
-              <p className="text-sm text-gray-500">
-                {ride?.pickup}
-              </p>
+              <p className="text-sm text-gray-500">{ride?.pickup}</p>
             </div>
           </div>
 
@@ -66,9 +91,7 @@ const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel ,ride}) 
             <div>
               <h3 className="font-semibold text-gray-800">Destination</h3>
 
-              <p className="text-sm text-gray-500">
-                {ride?.destination}
-              </p>
+              <p className="text-sm text-gray-500">{ride?.destination}</p>
             </div>
           </div>
 
@@ -88,10 +111,7 @@ const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel ,ride}) 
         </div>
 
         <div className="flex w-full mt-7 gap-2 items-center justify-between ">
-          <form
-            className="w-full flex flex-col gap-2"
-            onSubmit={(e) => submitHandler(e)}
-          >
+          <form className="w-full flex flex-col gap-2" onSubmit={submitHandler}>
             <input
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
@@ -110,10 +130,7 @@ const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel ,ride}) 
                 Cancel
               </button>
 
-              <button
-                
-                className="w-full flex justify-center  bg-green-600 font-semibold p-2 rounded-lg text-white "
-              >
+              <button className="w-full flex justify-center  bg-green-600 font-semibold p-2 rounded-lg text-white ">
                 Confirm
               </button>
             </div>

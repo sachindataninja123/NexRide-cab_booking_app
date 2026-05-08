@@ -11,6 +11,7 @@ import LookingforDrivers from "../components/LookingforDrivers";
 import WaitingforDrivers from "../components/WaitingforDrivers";
 import { SocketContext } from "../context/SocketContext";
 import { userDataContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -18,45 +19,31 @@ const Home = () => {
   const [panelOpen, setPanelOpen] = useState(false);
   const panelRef = useRef(null);
   const closePanelRef = useRef(null);
-
   const [vehiclePanelOpen, setVehiclePanelOpen] = useState(false);
   const vehiclePanelRef = useRef(null);
-
   const [confirmRidePanelOpen, setconfirmRidePanelOpen] = useState(false);
   const confirmRidePanelRef = useRef(null);
-
   const [vehicleFound, setvehicleFound] = useState(false);
   const vehicleFoundRef = useRef(null);
-
   const [waitingForDriver, setWaitingForDriver] = useState(false);
   const waitingForDriverRef = useRef(null);
-
   const [pickupSuggestions, setPickupSuggestions] = useState([]);
   const [destinationSuggestions, setDestinationSuggestions] = useState([]);
   const [activeField, setActiveField] = useState(null);
-
   const [pickupData, setPickupData] = useState(null);
   const [destinationData, setDestinationData] = useState(null);
-
   const [fare, setFare] = useState({});
   const [vehicleType, setVehicleType] = useState(null);
-
   const [ride, setRide] = useState(null);
-
   const { socket } = useContext(SocketContext);
   const { user } = useContext(userDataContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     socket.emit("join", { userType: "user", userId: user._id });
   }, [user]);
 
-  // socket.on("ride-confirmed", (ride) => {
-  //   setVehicleFound(false);
-  //   setWaitingForDriver(true);
-  //   setRide(ride);
-  // });
-
-  // ✅ replace the socket.on that's outside useEffect with this:
+  // replace the socket.on that's outside useEffect with this:
   useEffect(() => {
     socket.on("ride-confirmed", (ride) => {
       console.log("✅ Ride confirmed:", ride);
@@ -65,8 +52,13 @@ const Home = () => {
       setRide(ride);
     });
 
-    return () => socket.off("ride-confirmed"); // ✅ cleanup
+    return () => socket.off("ride-confirmed"); // cleanup
   }, []);
+
+  socket.on("ride-started", (ride) => {
+    setWaitingForDriver(false);
+    navigate("/riding");
+  });
 
   const handlePickUpChange = async (e) => {
     const value = e.target.value;

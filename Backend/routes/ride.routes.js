@@ -5,6 +5,8 @@ const {
   createRideController,
   getFare,
   confirmRideController,
+  startRide,
+  endRide,
 } = require("../controllers/ride.controller");
 
 const { isAuth, isCaptainAuth } = require("../middlewares/auth.middleware");
@@ -52,6 +54,24 @@ rideRouter.post(
   isCaptainAuth,
   body("rideId").isMongoId().withMessage("Invalid ride Id"),
   confirmRideController,
+);
+
+rideRouter.get(
+  "/start-ride",
+  isCaptainAuth,
+  query("rideId").isMongoId().withMessage("Invalid ride id"),
+  query("otp")
+    .isString()
+    .isLength({ min: 6, max: 6 })
+    .withMessage("Invalid OTP"),
+  startRide,
+);
+
+rideRouter.post(
+  "/end-ride",
+  isCaptainAuth,
+  body("rideId").isMongoId().withMessage("Invalid ride id"),
+  endRide,
 );
 
 module.exports = rideRouter;
