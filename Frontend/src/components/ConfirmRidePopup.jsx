@@ -6,7 +6,7 @@ import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel }) => {
+const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel ,ride}) => {
   const [otp, setOtp] = useState();
 
   const submitHandler = (e) => {
@@ -32,14 +32,14 @@ const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel }) => {
           />
 
           <div>
-            <h4 className="font-semibold text-gray-800">Sofia Ansari</h4>
+            <h4 className="font-semibold text-gray-800">{ride?.user.firstname}</h4>
             <p className="text-sm text-gray-500">Passenger</p>
           </div>
         </div>
 
         <div className="text-right">
           <p className="text-sm text-gray-500">2.2 KM</p>
-          <h3 className="text-2xl font-bold text-green-600">₹65.55</h3>
+          <h3 className="text-2xl font-bold text-green-600">₹{ride?.fare}</h3>
         </div>
       </div>
 
@@ -48,13 +48,13 @@ const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel }) => {
         <div className="mt-4 bg-gray-50 rounded-2xl overflow-hidden border border-gray-200">
           {/* Pickup */}
           <div className="flex gap-4 p-4">
-            <MdLocationPin size={22} className="text-blue-500 mt-1" />
+            <MdLocationPin size={25} className="text-blue-500 mt-1" />
 
             <div>
-              <h3 className="font-semibold text-gray-800">562/11-A</h3>
+              <h3 className="font-semibold text-gray-800">Pickup Point</h3>
 
               <p className="text-sm text-gray-500">
-                Bharat Colony, Faridabad, Haryana
+                {ride?.pickup}
               </p>
             </div>
           </div>
@@ -64,10 +64,10 @@ const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel }) => {
             <RiCheckboxFill size={22} className="text-green-500 mt-1" />
 
             <div>
-              <h3 className="font-semibold text-gray-800">Third Wave Coffee</h3>
+              <h3 className="font-semibold text-gray-800">Destination</h3>
 
               <p className="text-sm text-gray-500">
-                17th Cross Road, Sarita Colony, Badarpur, Delhi
+                {ride?.destination}
               </p>
             </div>
           </div>
@@ -80,7 +80,7 @@ const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel }) => {
             />
 
             <div>
-              <h3 className="font-semibold text-gray-800">₹65.55</h3>
+              <h3 className="font-semibold text-gray-800">₹{ride?.fare}</h3>
 
               <p className="text-sm text-gray-500">Cash Payment</p>
             </div>
@@ -109,12 +109,13 @@ const ConfirmRidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel }) => {
               >
                 Cancel
               </button>
-              <Link
-                to="/captain-riding"
+
+              <button
+                
                 className="w-full flex justify-center  bg-green-600 font-semibold p-2 rounded-lg text-white "
               >
                 Confirm
-              </Link>
+              </button>
             </div>
           </form>
         </div>

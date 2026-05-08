@@ -4,9 +4,10 @@ const { body, query } = require("express-validator");
 const {
   createRideController,
   getFare,
+  confirmRideController,
 } = require("../controllers/ride.controller");
 
-const { isAuth } = require("../middlewares/auth.middleware");
+const { isAuth, isCaptainAuth } = require("../middlewares/auth.middleware");
 
 const rideRouter = express.Router();
 
@@ -44,6 +45,13 @@ rideRouter.get(
     .withMessage("Invalid destination"),
 
   getFare,
+);
+
+rideRouter.post(
+  "/confirm",
+  isCaptainAuth,
+  body("rideId").isMongoId().withMessage("Invalid ride Id"),
+  confirmRideController,
 );
 
 module.exports = rideRouter;

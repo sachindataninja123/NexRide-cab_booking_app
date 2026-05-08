@@ -30,7 +30,7 @@ async function getTotalFare(pickup, destination) {
     pickupCoordinates,
     destinationCoordinates,
   );
-  
+
   const baseFare = {
     auto: 25,
     car: 40,
@@ -91,7 +91,38 @@ const createRide = async ({ user, pickup, destination, vehicleType }) => {
   return ride;
 };
 
+const confirmRide = async ({ rideId, captain }) => {
+  if (!rideId) {
+    throw new Error("Ride id is required");
+  }
+
+  await rideModel.findOneAndUpdate(
+    {
+      _id: rideId,
+    },
+    {
+      status: "accepted",
+      captain: captain._id,
+    },
+  );
+
+  const ride = await rideModel
+    .findOne({
+      _id: rideId,
+    })
+    .populate("user")
+    .populate("captain")
+    .select("+otp");
+
+  if (!ride) {
+    throw new Error("Ride not found");
+  }
+
+  return ride;
+};
+
 module.exports = {
   createRide,
-  getTotalFare
+  getTotalFare,
+  confirmRide,
 };

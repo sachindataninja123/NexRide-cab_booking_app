@@ -4,7 +4,7 @@ import { MdLocationPin } from "react-icons/md";
 import { RiCheckboxFill } from "react-icons/ri";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 
-const WaitingforDrivers = ({setWaitingForDriver}) => {
+const WaitingforDrivers = ({ setWaitingForDriver, ride }) => {
   return (
     <div>
       <h5
@@ -21,50 +21,71 @@ const WaitingforDrivers = ({setWaitingForDriver}) => {
             className="h-18 w-30 object-contain"
             alt="car"
           />
-
-          <img
-            className="absolute left-1 top-5 w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-            src="https://plus.unsplash.com/premium_photo-1691032016317-639a11f71b85?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW5kaWFuJTIwZHJpdmVyfGVufDB8fDB8fHww"
-            alt="driver"
-          />
         </div>
 
         <div className="text-right">
-          <h2 className="text-lg font-medium">Sachin</h2>
-          <h4 className="text-xl font-semibold -mt-1 -mb-1">BR29 AF 2363</h4>
+          <h2 className="text-lg font-medium capitalize">
+            {ride?.captain.fullname.firstname}
+          </h2>
+          <h4 className="text-xl font-semibold -mt-1 -mb-1">
+            {ride?.captain.vehicle.plate}
+          </h4>
           <p className="text-sm text-gray-700">Maruti Suzuki 800</p>
+          <h1 className="text-lg font-semibold ">OTP : {ride?.otp}</h1>
         </div>
       </div>
 
       <div className="flex gap-2 justify-between flex-col items-center">
-        <div className="w-full mt-5 ">
-          <div className="flex gap-3 justify-start mt-2 items-center">
-            <MdLocationPin size={20} />
-            <div>
-              <h3 className="font-bold text-gray-800 text-lg">562/11-A</h3>
-              <p className="text-sm text-gray-500 font-medium">
-                Bharat colony, Faridabad, Haryana
-              </p>
+        <div className="bg-gray-50 w-full rounded-xl p-3 mt-4 shadow-sm border border-gray-100">
+          {/* PICKUP */}
+          <div className="flex items-start gap-4 pb-4">
+            <div className="bg-green-100 p-2 rounded-full">
+              <MdLocationPin size={20} className="text-green-600" />
             </div>
-          </div>
-          <div className="flex gap-3 border-t pt-2  border-gray-200 justify-start mt-2 items-center">
-            <RiCheckboxFill size={20} />
+
             <div>
-              <h3 className="font-bold text-gray-800 text-lg">
-                Third Wave Coffee
+              <h3 className="font-semibold text-gray-800 text-base">
+                Pickup Location
               </h3>
-              <p className="text-sm text-gray-500 font-medium">
-                17th Cross Road, PWD Quarters Sarita colony, Badarpur, Delhi
+              <p className="text-sm text-gray-500 mt-1 wrap-break-word">
+                {ride?.pickup}
               </p>
             </div>
           </div>
-          <div className="flex gap-3 text-gray-800 border-t pt-2 border-gray-200 justify-start mt-2 items-center">
-            <RiMoneyRupeeCircleFill size={20} />
+
+          {/* DESTINATION */}
+          <div className="flex items-start gap-4 py-4 border-t border-gray-200">
+            <div className="bg-blue-100 p-2 rounded-full">
+              <RiCheckboxFill size={20} className="text-blue-600" />
+            </div>
+
             <div>
-              <h3 className="font-bold text-lg">562/11-A</h3>
-              <p className="text-sm text-gray-500 font-medium">
-                Bharat colony, Faridabad, Haryana
+              <h3 className="font-semibold text-gray-800 text-base">
+                Destination
+              </h3>
+              <p className="text-sm text-gray-500 mt-1 wrap-break-word">
+                {ride?.destination}
               </p>
+            </div>
+          </div>
+
+          {/* FARE */}
+          <div className="flex items-start gap-4 pt-4 border-t border-gray-200">
+            <div className="bg-yellow-100 p-2 rounded-full">
+              <RiMoneyRupeeCircleFill size={20} className="text-yellow-600" />
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-gray-800 text-base flex gap-1 items-center justify-center">
+                Total Fare
+                <span className="text-sm text-gray-500">(Cash)</span>
+              </h3>
+
+              <div className="flex  flex-col mt-1">
+                <span className="text-xl font-semibold text-gray-900">
+                  ₹{ride?.fare}
+                </span>
+              </div>
             </div>
           </div>
         </div>

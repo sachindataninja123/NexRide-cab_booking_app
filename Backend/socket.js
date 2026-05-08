@@ -17,7 +17,6 @@ function initializeSocket(server) {
 
     socket.on("join", async (data) => {
       const { userId, userType } = data;
-
       if (userType === "user") {
         await userModel.findByIdAndUpdate(userId, { socketId: socket.id });
       } else if (userType === "captain") {
@@ -28,14 +27,16 @@ function initializeSocket(server) {
     socket.on("update-location-captain", async (data) => {
       const { userId, location } = data;
 
-      if (!location || !location.ltd || !location.lng) {
+      // ✅ validate lat/lng (frontend now sends lat/lng)
+      if (!location || !location.lat || !location.lng) {
         return socket.emit("error", { message: "Invalid location data" });
       }
 
+      // ✅ Save as GeoJSON Point
       await captainModel.findByIdAndUpdate(userId, {
         location: {
-          ltd: location.ltd,
-          lng: location.lng,
+          type: "Point",
+          coordinates: [location.lng, location.lat], // [longitude, latitude]
         },
       });
     });
@@ -48,7 +49,6 @@ function initializeSocket(server) {
 
 const sendMessageToSocketId = (socketId, messageObject) => {
   console.log(messageObject);
-
   if (io) {
     io.to(socketId).emit(messageObject.event, messageObject.data);
   } else {

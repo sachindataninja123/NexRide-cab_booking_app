@@ -76,8 +76,6 @@ const LookingforDrivers = ({
                 <span className="text-xl font-semibold text-gray-900">
                   ₹{fare?.[vehicleType]}
                 </span>
-
-                
               </div>
             </div>
           </div>
