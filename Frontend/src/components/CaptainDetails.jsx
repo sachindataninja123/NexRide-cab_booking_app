@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { RiCheckboxFill, RiMoneyRupeeCircleFill } from "react-icons/ri";
+import { captainDataContext } from "../context/CaptainContext";
 
 const CaptainDetails = () => {
+  const { captain } = useContext(captainDataContext);
   return (
     <div>
       {/* DRIVER INFO */}
@@ -12,15 +14,12 @@ const CaptainDetails = () => {
             src="https://www.pngplay.com/wp-content/uploads/8/Uber-PNG-Photos.png"
             alt="car"
           />
-          <img
-            className="absolute left-16 w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
-            src="https://images.pexels.com/photos/17785909/pexels-photo-17785909.jpeg"
-            alt="driver"
-          />
         </div>
 
         <div className="text-right">
-          <h2 className="text-md font-semibold">Sachin</h2>
+          <h2 className="text-md font-semibold capitalize">
+            {captain.fullname.firstname + " " + captain.fullname.lastname}
+          </h2>
           <h4 className="font-bold">BR29 AF 2363</h4>
           <p className="text-sm text-gray-500">Maruti Suzuki Alto</p>
         </div>

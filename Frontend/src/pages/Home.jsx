@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import axios from "axios";
 import { useState, useRef } from "react";
 import { useGSAP } from "@gsap/react";
@@ -9,6 +9,8 @@ import VehiclePanel from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
 import LookingforDrivers from "../components/LookingforDrivers";
 import WaitingforDrivers from "../components/WaitingforDrivers";
+import { SocketContext } from "../context/SocketContext";
+import { userDataContext } from "../context/UserContext";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -38,6 +40,13 @@ const Home = () => {
 
   const [fare, setFare] = useState({});
   const [vehicleType, setVehicleType] = useState(null);
+
+  const { socket } = useContext(SocketContext);
+  const { user } = useContext(userDataContext);
+
+  useEffect(() => {
+    socket.emit("join", { userType: "user", userId: user._id });
+  }, [user]);
 
   const handlePickUpChange = async (e) => {
     const value = e.target.value;

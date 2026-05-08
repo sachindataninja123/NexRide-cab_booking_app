@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { IoLogOutOutline } from "react-icons/io5";
 import CaptainDetails from "../components/CaptainDetails";
 import RidePopup from "../components/RidePopup";
@@ -6,6 +6,8 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap/gsap-core";
 import { useState, useRef } from "react";
 import ConfirmRidePopup from "../components/ConfirmRidePopup";
+import { SocketContext } from "../context/SocketContext";
+import { captainDataContext } from "../context/CaptainContext";
 
 const CaptainHome = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(true);
@@ -13,6 +15,16 @@ const CaptainHome = () => {
 
   const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
   const confirmRidePopupPanelRef = useRef(null);
+
+  const { socket } = useContext(SocketContext);
+  const { captain } = useContext(captainDataContext);
+
+  useEffect(() => {
+    socket.emit("join", {
+      userId: captain._id,
+      userType: "captain",
+    });
+  }, [captain]);
 
   useGSAP(() => {
     if (ridePopupPanel) {
