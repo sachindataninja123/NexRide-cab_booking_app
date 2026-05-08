@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import { useState, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap/gsap-core";
@@ -10,8 +11,8 @@ import LookingforDrivers from "../components/LookingforDrivers";
 import WaitingforDrivers from "../components/WaitingforDrivers";
 
 const Home = () => {
-  const [pickup, setPickup] = useState();
-  const [destination, setDestination] = useState();
+  const [pickup, setPickup] = useState("");
+  const [destination, setDestination] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
   const panelRef = useRef(null);
   const closePanelRef = useRef(null);
@@ -28,11 +29,68 @@ const Home = () => {
   const [waitingForDriver, setWaitingForDriver] = useState(false);
   const waitingForDriverRef = useRef(null);
 
+  const [pickupSuggestions, setPickupSuggestions] = useState([]);
+  const [destinationSuggestions, setDestinationSuggestions] = useState([]);
+  const [activeField, setActiveField] = useState(null);
+
+  const [pickupData, setPickupData] = useState(null);
+  const [destinationData, setDestinationData] = useState(null);
+
+
+  const handlePickUpChange = async (e) => {
+    const value = e.target.value;
+
+    setPickup(value);
+
+    if (value.trim().length < 3) {
+      setPickupSuggestions([]);
+      return;
+    }
+
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
+        {
+          params: { input: e.target.value },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      setPickupSuggestions(res.data);
+    } catch (error) {
+      console.log("Handle pickup suggestions error", error.message);
+    }
+  };
+
+  const handleDestinationChange = async (e) => {
+    const value = e.target.value;
+
+    setDestination(value);
+
+    if (value.trim().length < 3) {
+      setDestinationSuggestions([]);
+      return;
+    }
+
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
+        {
+          params: { input: e.target.value },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      setDestinationSuggestions(res.data);
+    } catch (error) {
+      console.log("Handle Destination suggestions error", error.message);
+    }
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
-
-    setPickup("");
-    setDestination("");
   };
 
   useGSAP(() => {
@@ -103,6 +161,13 @@ const Home = () => {
     }
   }, [waitingForDriver]);
 
+  function findTrip() {
+    if (!pickup || !destination) return;
+
+    setVehiclePanelOpen(true);
+    setPanelOpen(false);
+  }
+
   return (
     <div className="relative h-screen overflow-hidden">
       <img
@@ -135,29 +200,52 @@ const Home = () => {
             <input
               onClick={() => {
                 setPanelOpen(true);
+                setActiveField("pickup");
               }}
               className="bg-[#eee] w-full text-base rounded-lg px-10 py-2 mt-4"
               type="text"
               value={pickup}
-              onChange={(e) => setPickup(e.target.value)}
+              onChange={handlePickUpChange}
               placeholder="Add a pick-up location"
             />
             <input
               onClick={() => {
                 setPanelOpen(true);
+                setActiveField("destination");
               }}
               className="bg-[#eee] w-full text-base rounded-lg px-10 py-2 mt-3 "
               type="text"
               value={destination}
-              onChange={(e) => setDestination(e.target.value)}
+              onChange={handleDestinationChange}
               placeholder="Enter your destination"
             />
           </form>
+          <button
+            disabled={!pickup || !destination}
+            onClick={findTrip}
+            className={`px-4 py-2 mt-3 rounded-md w-full text-white ${
+              pickup && destination
+                ? "bg-black"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+          >
+            Find Trip
+          </button>
         </div>
         <div ref={panelRef} className="bg-white h-0 ">
           <LocationSearchPanel
             setPanelOpen={setPanelOpen}
             setVehiclePanelOpen={setVehiclePanelOpen}
+            setPickup={setPickup}
+            setDestination={setDestination}
+            setPickupData={setPickupData}
+            setDestinationData={setDestinationData}
+            activeField={activeField}
+            suggestions={
+              activeField === "pickup"
+                ? pickupSuggestions
+                : destinationSuggestions
+            }
           />
         </div>
       </div>
@@ -190,8 +278,8 @@ const Home = () => {
       </div>
 
       <div
-       ref={waitingForDriverRef}
-        className="fixed w-full  z-10 bottom-0 bg-white px-3 py-6 pt-12"
+        ref={waitingForDriverRef}
+        className="fixed w-full translate-y-full  z-10 bottom-0 bg-white px-3 py-6 pt-12"
       >
         <WaitingforDrivers
           waitingForDriver={waitingForDriver}
