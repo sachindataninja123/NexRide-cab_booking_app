@@ -36,6 +36,8 @@ const Home = () => {
   const [pickupData, setPickupData] = useState(null);
   const [destinationData, setDestinationData] = useState(null);
 
+  const [fare, setFare] = useState({});
+  const [vehicleType, setVehicleType] = useState(null);
 
   const handlePickUpChange = async (e) => {
     const value = e.target.value;
@@ -161,11 +163,55 @@ const Home = () => {
     }
   }, [waitingForDriver]);
 
-  function findTrip() {
-    if (!pickup || !destination) return;
+  async function findTrip() {
+    if (!pickupData || !destinationData) return;
 
-    setVehiclePanelOpen(true);
-    setPanelOpen(false);
+    try {
+      setVehiclePanelOpen(true);
+      setPanelOpen(false);
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/rides/get-fare`,
+
+        {
+          params: {
+            pickup,
+            destination,
+          },
+
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      // console.log(res.data);
+      setFare(res.data);
+    } catch (error) {
+      console.log("Fare Error", error.response?.data || error.message);
+    }
+  }
+
+  async function createRide() {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/rides/create`,
+        {
+          pickup,
+          vehicleType,
+          destination,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      console.log(res.data);
+    } catch (error) {
+      console.log("Create Ride Error", error.response?.data || error.message);
+    }
   }
 
   return (
@@ -257,6 +303,8 @@ const Home = () => {
         <VehiclePanel
           setVehiclePanelOpen={setVehiclePanelOpen}
           setconfirmRidePanelOpen={setconfirmRidePanelOpen}
+          fare={fare}
+          setVehicleType={setVehicleType}
         />
       </div>
 
@@ -265,6 +313,11 @@ const Home = () => {
         className="fixed w-full translate-y-full z-10 bottom-0 bg-white px-3 py-6 pt-12"
       >
         <ConfirmRide
+          fare={fare}
+          vehicleType={vehicleType}
+          pickup={pickup}
+          destination={destination}
+          createRide={createRide}
           setconfirmRidePanelOpen={setconfirmRidePanelOpen}
           setvehicleFound={setvehicleFound}
         />
@@ -274,7 +327,13 @@ const Home = () => {
         ref={vehicleFoundRef}
         className="fixed w-full translate-y-full z-10 bottom-0 bg-white px-3 py-6 pt-12"
       >
-        <LookingforDrivers setvehicleFound={setvehicleFound} />
+        <LookingforDrivers
+          fare={fare}
+          vehicleType={vehicleType}
+          pickup={pickup}
+          destination={destination}
+          setvehicleFound={setvehicleFound}
+        />
       </div>
 
       <div

@@ -1,7 +1,10 @@
 const express = require("express");
-const { body } = require("express-validator");
+const { body, query } = require("express-validator");
 
-const { createRideController } = require("../controllers/ride.controller");
+const {
+  createRideController,
+  getFare,
+} = require("../controllers/ride.controller");
 
 const { isAuth } = require("../middlewares/auth.middleware");
 
@@ -28,6 +31,19 @@ rideRouter.post(
     .withMessage("Invalid vehicle type"),
 
   createRideController,
+);
+
+rideRouter.get(
+  "/get-fare",
+  isAuth,
+  query("pickup").isString().isLength({ min: 3 }).withMessage("Invalid pickup"),
+
+  query("destination")
+    .isString()
+    .isLength({ min: 3 })
+    .withMessage("Invalid destination"),
+
+  getFare,
 );
 
 module.exports = rideRouter;

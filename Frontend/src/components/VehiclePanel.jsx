@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { IoIosPeople } from "react-icons/io";
 import { RiArrowDownWideLine } from "react-icons/ri";
 
-const VehiclePanel = ({ setVehiclePanelOpen, setconfirmRidePanelOpen }) => {
+const VehiclePanel = ({
+  setVehiclePanelOpen,
+  setconfirmRidePanelOpen,
+  fare,
+  setVehicleType,
+}) => {
   return (
     <div className="px-4 py-3">
       <h5
@@ -16,7 +21,10 @@ const VehiclePanel = ({ setVehiclePanelOpen, setconfirmRidePanelOpen }) => {
       {/* CARD TEMPLATE */}
       {/* CAR */}
       <div
-        onClick={() => setconfirmRidePanelOpen(true)}
+        onClick={() => {
+          setconfirmRidePanelOpen(true);
+          setVehicleType("car");
+        }}
         className={`flex items-center justify-between p-4 rounded-xl border  mb-3  border-gray-200 active:border-black  cursor-pointer transition-all
        `}
       >
@@ -28,7 +36,7 @@ const VehiclePanel = ({ setVehiclePanelOpen, setconfirmRidePanelOpen }) => {
           />
 
           <div>
-            <h3 className="text-sm gap-1 flex justify-start items-center font-semibold">
+            <h3 className="text-md gap-1 flex justify-start  items-center font-semibold">
               UberGo{" "}
               <span className="text-gray-700 flex items-center justify-center text-md font-normal">
                 <IoIosPeople className="text-blue-800" size={15} /> 4
@@ -39,12 +47,15 @@ const VehiclePanel = ({ setVehiclePanelOpen, setconfirmRidePanelOpen }) => {
           </div>
         </div>
 
-        <h4 className="text-sm font-semibold">₹150.55</h4>
+        <h4 className="text-md font-semibold">₹{fare.car}</h4>
       </div>
 
       {/* AUTO */}
       <div
-        onClick={() => setconfirmRidePanelOpen(true)}
+        onClick={() => {
+          setconfirmRidePanelOpen(true);
+          setVehicleType("auto");
+        }}
         className={`flex items-center justify-between p-4 rounded-xl border border-gray-200 active:border-black  mb-3 cursor-pointer transition-all
         `}
       >
@@ -56,7 +67,7 @@ const VehiclePanel = ({ setVehiclePanelOpen, setconfirmRidePanelOpen }) => {
           />
 
           <div>
-            <h3 className="text-sm gap-1 flex justify-start items-center font-semibold">
+            <h3 className="text-md gap-1 flex justify-start  items-center font-semibold">
               UberAuto{" "}
               <span className="text-gray-700 flex items-center justify-center text-md font-normal">
                 <IoIosPeople className="text-blue-800" size={15} /> 3
@@ -67,12 +78,15 @@ const VehiclePanel = ({ setVehiclePanelOpen, setconfirmRidePanelOpen }) => {
           </div>
         </div>
 
-        <h4 className="text-sm font-semibold">₹120.66</h4>
+        <h4 className="text-md font-semibold">₹{fare.auto}</h4>
       </div>
 
       {/* BIKE */}
       <div
-        onClick={() => setconfirmRidePanelOpen(true)}
+        onClick={() => {
+          setconfirmRidePanelOpen(true);
+          setVehicleType("moto");
+        }}
         className={`flex items-center justify-between p-4 rounded-xl border mb-3  border-gray-200 active:border-black  cursor-pointer transition-all
        `}
       >
@@ -84,7 +98,7 @@ const VehiclePanel = ({ setVehiclePanelOpen, setconfirmRidePanelOpen }) => {
           />
 
           <div>
-            <h3 className="text-sm font-semibold flex justify-start items-center gap-1">
+            <h3 className="text-md font-semibold  flex justify-start items-center gap-1">
               Moto{" "}
               <span className="text-gray-700 flex items-center justify-center  text-md font-normal">
                 <IoIosPeople className="text-blue-800" size={15} />1
@@ -95,7 +109,7 @@ const VehiclePanel = ({ setVehiclePanelOpen, setconfirmRidePanelOpen }) => {
           </div>
         </div>
 
-        <h4 className="text-sm font-semibold">₹65.44</h4>
+        <h4 className="text-md font-semibold">₹{fare.moto}</h4>
       </div>
     </div>
   );

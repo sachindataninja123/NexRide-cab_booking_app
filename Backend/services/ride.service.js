@@ -11,7 +11,7 @@ function getOtp(num) {
     .padStart(num, "0");
 }
 
-async function getFare(pickup, destination) {
+async function getTotalFare(pickup, destination) {
   if (!pickup || !destination) {
     throw new Error("Pickup and destination are required");
   }
@@ -21,9 +21,9 @@ async function getFare(pickup, destination) {
 
   const destinationCoordinates = await getAddressCoordinate(destination);
 
-  console.log("Pickup Coordinates:", pickupCoordinates);
+  // console.log("Pickup Coordinates:", pickupCoordinates);
 
-  console.log("Destination Coordinates:", destinationCoordinates);
+  // console.log("Destination Coordinates:", destinationCoordinates);
 
   // Get distance + duration
   const distanceTime = await getDistanceAndDuration(
@@ -77,7 +77,7 @@ const createRide = async ({ user, pickup, destination, vehicleType }) => {
     throw new Error("All fields are required");
   }
 
-  const fare = await getFare(pickup, destination);
+  const fare = await getTotalFare(pickup, destination);
 
   const ride = await rideModel.create({
     user,
@@ -93,4 +93,5 @@ const createRide = async ({ user, pickup, destination, vehicleType }) => {
 
 module.exports = {
   createRide,
+  getTotalFare
 };
