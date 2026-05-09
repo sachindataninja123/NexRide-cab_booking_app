@@ -161,7 +161,6 @@
 
 // export default CaptainHome;
 
-
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoLogOutOutline } from "react-icons/io5";
 import CaptainDetails from "../components/CaptainDetails";
@@ -172,6 +171,7 @@ import ConfirmRidePopup from "../components/ConfirmRidePopup";
 import { SocketContext } from "../context/SocketContext";
 import { captainDataContext } from "../context/CaptainContext";
 import axios from "axios";
+import LiveTracking from "../components/LiveTracking";
 
 const CaptainHome = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
@@ -183,7 +183,6 @@ const CaptainHome = () => {
   const [ride, setRide] = useState(null);
   const rideRef = useRef(null);
 
-  
   useEffect(() => {
     socket.emit("join", {
       userId: captain._id,
@@ -233,7 +232,7 @@ const CaptainHome = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       if (response.status === 200) {
@@ -241,7 +240,10 @@ const CaptainHome = () => {
         setConfirmRidePopupPanel(true);
       }
     } catch (error) {
-      console.error("Confirm ride error:", error.response?.data || error.message);
+      console.error(
+        "Confirm ride error:",
+        error.response?.data || error.message,
+      );
     }
   }
 
@@ -257,7 +259,9 @@ const CaptainHome = () => {
     if (confirmRidePopupPanel) {
       gsap.to(confirmRidePopupPanelRef.current, { transform: "translateY(0)" });
     } else {
-      gsap.to(confirmRidePopupPanelRef.current, { transform: "translateY(100%)" });
+      gsap.to(confirmRidePopupPanelRef.current, {
+        transform: "translateY(100%)",
+      });
     }
   }, [confirmRidePopupPanel]);
 
@@ -274,14 +278,14 @@ const CaptainHome = () => {
         </div>
       </div>
 
-      <div className="h-[55%] relative">
-        <img src="https://i.sstatic.net/B6fEt.png" alt="map" className="w-full h-full object-cover" />
+      <div className="h-[70%] relative">
+        <LiveTracking />
         <div className="absolute bottom-4 left-4 bg-green-500 text-white px-4 py-1 rounded-full text-sm shadow-lg">
           ● Online
         </div>
       </div>
 
-      <div className="h-[45%] bg-white p-5 shadow-2xl">
+      <div className="h-[30%] bg-white p-5 shadow-2xl">
         <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-5"></div>
         <CaptainDetails />
       </div>
@@ -303,7 +307,7 @@ const CaptainHome = () => {
         className="fixed w-full h-[90%] z-10 bottom-0 translate-y-full bg-white px-3 py-7 pt-12"
       >
         <ConfirmRidePopup
-          ride={ride}                            // 
+          ride={ride} //
           setRidePopupPanel={setRidePopupPanel}
           setConfirmRidePopupPanel={setConfirmRidePopupPanel}
         />

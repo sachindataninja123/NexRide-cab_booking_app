@@ -38,7 +38,7 @@ const createRideController = async (req, res) => {
     const captains = await getCaptainsInTheRadius(
       pickUpCoordinates.lat,
       pickUpCoordinates.lng,
-      5, // radius in km
+      50, // radius in km
     );
     // console.log("Nearby captains:", captains);
     ride.otp = "";

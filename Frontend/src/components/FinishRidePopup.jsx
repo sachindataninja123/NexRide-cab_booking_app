@@ -3,9 +3,34 @@ import { RiArrowDownWideLine } from "react-icons/ri";
 import { MdLocationPin } from "react-icons/md";
 import { RiCheckboxFill } from "react-icons/ri";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const FinishRidePopup = ({ setFinishRidePanel }) => {
+const FinishRidePopup = ({ setFinishRidePanel, rideData }) => {
+
+  const navigate = useNavigate()
+
+  const endRide = async () => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/rides/end-ride`,
+        {
+          rideId: rideData._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      if (res.status === 200) {
+        setFinishRidePanel(false);
+        navigate("/captain-home");
+      }
+    } catch (error) {}
+  };
+
   return (
     <div>
       <h5
@@ -25,30 +50,32 @@ const FinishRidePopup = ({ setFinishRidePanel }) => {
           />
 
           <div>
-            <h4 className="font-semibold text-gray-800">Sofia Ansari</h4>
+            <h4 className="font-semibold text-gray-800">
+              {rideData?.user.firstname}
+            </h4>
             <p className="text-sm text-gray-500">Passenger</p>
           </div>
         </div>
 
         <div className="text-right">
           <p className="text-sm text-gray-500">2.2 KM</p>
-          <h3 className="text-2xl font-bold text-green-600">₹65.55</h3>
+          <h3 className="text-2xl font-bold text-green-600">
+            ₹{rideData?.fare}
+          </h3>
         </div>
       </div>
 
-      <div className="flex gap-1  justify-between flex-col items-center">
+      <div className="flex gap-1  justify-between flex-col  items-center">
         {/* Ride Details */}
-        <div className="mt-6 bg-gray-50 rounded-2xl overflow-hidden border border-gray-200">
+        <div className="mt-6 bg-gray-50 rounded-2xl w-full overflow-hidden border border-gray-200">
           {/* Pickup */}
           <div className="flex gap-4 p-4">
             <MdLocationPin size={22} className="text-blue-500 mt-1" />
 
             <div>
-              <h3 className="font-semibold text-gray-800">562/11-A</h3>
+              <h3 className="font-semibold text-gray-800">Pickup Point</h3>
 
-              <p className="text-sm text-gray-500">
-                Bharat Colony, Faridabad, Haryana
-              </p>
+              <p className="text-sm text-gray-500">{rideData?.pickup}</p>
             </div>
           </div>
 
@@ -57,11 +84,9 @@ const FinishRidePopup = ({ setFinishRidePanel }) => {
             <RiCheckboxFill size={22} className="text-green-500 mt-1" />
 
             <div>
-              <h3 className="font-semibold text-gray-800">Third Wave Coffee</h3>
+              <h3 className="font-semibold text-gray-800">Destination</h3>
 
-              <p className="text-sm text-gray-500">
-                17th Cross Road, Sarita Colony, Badarpur, Delhi
-              </p>
+              <p className="text-sm text-gray-500">{rideData?.destination}</p>
             </div>
           </div>
 
@@ -73,7 +98,7 @@ const FinishRidePopup = ({ setFinishRidePanel }) => {
             />
 
             <div>
-              <h3 className="font-semibold text-gray-800">₹65.55</h3>
+              <h3 className="font-semibold text-gray-800">₹{rideData?.fare}</h3>
 
               <p className="text-sm text-gray-500">Cash Payment</p>
             </div>
@@ -82,12 +107,12 @@ const FinishRidePopup = ({ setFinishRidePanel }) => {
 
         {/* Button */}
         <div className="mt-8 w-full">
-          <Link
-            to="/captain-home"
+          <button
+            onClick={endRide}
             className="w-full bg-green-600 hover:bg-green-700 transition-all duration-200 text-white font-semibold py-3 rounded-lg flex items-center justify-center"
           >
             Finish Ride
-          </Link>
+          </button>
 
           <p className="text-center text-sm text-red-500 mt-2">
             Finish the ride only after completing the trip.

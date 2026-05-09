@@ -1,78 +1,3 @@
-// import React from "react";
-// import { IoLogOutOutline } from "react-icons/io5";
-// import { RiArrowDownWideLine } from "react-icons/ri";
-// import { useGSAP } from "@gsap/react";
-// import { gsap } from "gsap/gsap-core";
-// import FinishRidePopup from "../components/FinishRidePopup";
-// import { useState, useRef } from "react";
-
-// const CaptainRide = () => {
-//   const [finishRidePanel, setFinishRidePanel] = useState(false);
-//   const finishRidePanelRef = useRef(null);
-
-//   useGSAP(() => {
-//     if (finishRidePanel) {
-//       gsap.to(finishRidePanelRef.current, {
-//         transform: "translateY(0)",
-//       });
-//     } else {
-//       gsap.to(finishRidePanelRef.current, {
-//         transform: "translateY(100%)",
-//       });
-//     }
-//   }, [finishRidePanel]);
-
-//   return (
-//     <div className="h-screen ">
-//       <div className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 pt-4">
-//         <img
-//           className="w-14"
-//           src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-//           alt="logo"
-//         />
-//         <div className="bg-white p-2 rounded-full shadow-md">
-//           <IoLogOutOutline size={18} />
-//         </div>
-//       </div>
-
-//       {/* MAP */}
-//       <div className="h-[80%] relative">
-//         <img
-//           src="https://i.sstatic.net/B6fEt.png"
-//           alt="map"
-//           className="w-full h-full object-cover"
-//         />
-//       </div>
-
-//       <div
-//         className="h-1/5 p-6 relative bg-yellow-400"
-//         onClick={() => {
-//           setFinishRidePanel(true);
-//         }}
-//       >
-//         <h5 className="absolute w-[93%] flex items-center justify-center mx-auto text-gray-900 top-2 right-5 ">
-//           <RiArrowDownWideLine size={26} />
-//         </h5>
-//         <div className="flex justify-between items-center gap-4 mt-8">
-//           <h4 className="font-semibold text-xl">4km away</h4>
-//           <button className="w-1/2 flex justify-center bg-green-600 font-semibold p-2 rounded-lg text-white ">
-//             Complete Ride
-//           </button>
-//         </div>
-//       </div>
-
-//       <div
-//         ref={finishRidePanelRef}
-//         className="fixed w-full h-[90%] z-10 bottom-0 translate-y-full  bg-white px-3 py-7 pt-12"
-//       >
-//         <FinishRidePopup setFinishRidePanel={setFinishRidePanel} />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default CaptainRide;
-
 import React, { useState, useRef } from "react";
 import { IoLogOutOutline } from "react-icons/io5";
 import { RiArrowDownWideLine } from "react-icons/ri";
@@ -80,11 +5,14 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 import FinishRidePopup from "../components/FinishRidePopup";
+import { useLocation } from "react-router-dom";
+import LiveTracking from "../components/LiveTracking";
 
 const CaptainRide = () => {
   const [finishRidePanel, setFinishRidePanel] = useState(false);
-
   const finishRidePanelRef = useRef(null);
+  const location = useLocation();
+  const rideData = location.state?.ride;
 
   useGSAP(() => {
     if (finishRidePanel) {
@@ -119,11 +47,7 @@ const CaptainRide = () => {
 
       {/* MAP */}
       <div className="h-full w-full">
-        <img
-          src="https://i.sstatic.net/B6fEt.png"
-          alt="map"
-          className="w-full h-full object-cover"
-        />
+        <LiveTracking />
       </div>
 
       {/* BOTTOM RIDE CARD */}
@@ -156,7 +80,10 @@ const CaptainRide = () => {
         className="fixed bottom-0 left-0 z-60 w-full h-[88%] bg-white rounded-t-3xl translate-y-full shadow-2xl overflow-y-auto"
       >
         <div className="px-5 py-6">
-          <FinishRidePopup setFinishRidePanel={setFinishRidePanel} />
+          <FinishRidePopup
+            rideData={rideData}
+            setFinishRidePanel={setFinishRidePanel}
+          />
         </div>
       </div>
     </div>

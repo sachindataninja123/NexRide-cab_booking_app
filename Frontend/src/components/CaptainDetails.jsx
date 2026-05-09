@@ -44,10 +44,6 @@ const CaptainDetails = () => {
         </div>
       </div>
 
-      {/* ACTION BUTTON */}
-      <button className="w-full mt-7 bg-black text-white py-3 rounded-xl font-medium text-md active:scale-95 transition">
-        Go Offline
-      </button>
     </div>
   );
 };

@@ -1,21 +1,22 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { TiHomeOutline } from "react-icons/ti";
 import { RiCheckboxFill } from "react-icons/ri";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
+import { MdLocationPin } from "react-icons/md";
+import { SocketContext } from "../context/SocketContext";
+import LiveTracking from "../components/LiveTracking";
 
 const Riding = () => {
-  const ride = {
-    captain: {
-      fullname: { firstname: "Sachin" },
-      vehicle: {
-        plate: "BR29 AF 2363",
-        model: "Maruti Suzuki Alto",
-      },
-    },
-    destination: "Sector 87, Faridabad, Haryana",
-    fare: 249,
-  };
+  const location = useLocation();
+  const { ride } = location.state || {};
+
+  const { socket } = useContext(SocketContext);
+  const navigate = useNavigate();
+
+  socket.on("ride-ended", () => {
+    navigate("/home");
+  });
 
   return (
     <div className="h-screen flex flex-col">
@@ -27,11 +28,7 @@ const Riding = () => {
       </Link>
 
       <div className="h-1/2 relative">
-        <img
-          src="https://images.pexels.com/photos/210182/pexels-photo-210182.jpeg"
-          alt="map placeholder"
-          className="w-full h-full object-cover"
-        />
+       <LiveTracking />
 
         <div className="absolute bottom-3 left-3 bg-black/60 text-white px-3 py-1 rounded-lg text-sm">
           Driver is on the way 🚗
@@ -46,23 +43,20 @@ const Riding = () => {
               src="https://www.pngplay.com/wp-content/uploads/8/Uber-PNG-Photos.png"
               alt="car"
             />
-
-            <img
-              className="absolute left-12 w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-              src="https://images.pexels.com/photos/17785909/pexels-photo-17785909.jpeg"
-              alt="driver"
-            />
           </div>
 
           <div className="text-right">
             <h2 className="text-lg font-medium">
-              {ride.captain.fullname.firstname}
+              {ride?.captain.fullname.firstname}
             </h2>
             <h4 className="text-xl font-semibold -mt-1 -mb-1">
-              {ride.captain.vehicle.plate}
+              {ride?.captain.vehicle.plate}
             </h4>
-            <p className="text-sm text-gray-600">
-              {ride.captain.vehicle.model}
+            <p className="text-sm mt-1 text-gray-600 flex items-center justify-center">
+              Capacity :
+              <span className="ml-1 font-semibold">
+                {ride?.captain.vehicle.capacity}
+              </span>
             </p>
           </div>
         </div>
@@ -70,17 +64,24 @@ const Riding = () => {
         {/* Ride Details */}
         <div className="mt-5">
           <div className="flex items-center gap-3 p-3 border-b">
+            <MdLocationPin size={20} />
+            <div>
+              <h3 className="text-lg font-medium">Pickup Point</h3>
+              <p className="text-sm text-gray-600">{ride?.pickup}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 p-3 border-b">
             <RiCheckboxFill size={20} />
             <div>
               <h3 className="text-lg font-medium">Destination Point</h3>
-              <p className="text-sm text-gray-600">{ride.destination}</p>
+              <p className="text-sm text-gray-600">{ride?.destination}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3 p-3">
             <RiMoneyRupeeCircleFill size={20} />
             <div>
-              <h3 className="text-lg font-medium">₹{ride.fare}</h3>
+              <h3 className="text-lg font-medium">₹{ride?.fare}</h3>
               <p className="text-sm text-gray-600">Cash Payment</p>
             </div>
           </div>

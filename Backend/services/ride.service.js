@@ -157,6 +157,7 @@ const startRideSevice = async ({ rideId, otp, captain }) => {
 
   return ride;
 };
+
 const endRideService = async ({ rideId, captain }) => {
   if (!rideId) {
     throw new Error("Ride id is required");
@@ -175,9 +176,9 @@ const endRideService = async ({ rideId, captain }) => {
     throw new Error("Ride not found");
   }
 
-  if (ride.status !== "ongoing") {
-    throw new Error("Ride not ongoing");
-  }
+  // if (ride.status !== "ongoing") {
+  //   throw new Error("Ride not ongoing");
+  // }
 
   await rideModel.findOneAndUpdate(
     {

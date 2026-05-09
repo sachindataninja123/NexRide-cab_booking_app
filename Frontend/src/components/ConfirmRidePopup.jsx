@@ -34,9 +34,11 @@ const ConfirmRidePopup = ({
     if (res.status === 200) {
       setConfirmRidePopupPanel(false);
       setRidePopupPanel(false);
-      navigate("/captain-riding");
+      navigate("/captain-riding", { state: { ride: ride } });
     }
   };
+
+  
 
   return (
     <div>
@@ -50,12 +52,7 @@ const ConfirmRidePopup = ({
 
       <div className="flex items-center justify-between bg-gray-50 border border-gray-200 shadow-sm rounded-2xl p-4">
         <div className="flex items-center gap-3">
-          <img
-            className="w-14 h-14 object-cover rounded-full border"
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60"
-            alt="user"
-          />
-
+          
           <div>
             <h4 className="font-semibold text-gray-800">
               {ride?.user.firstname}
